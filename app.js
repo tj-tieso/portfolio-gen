@@ -1,33 +1,6 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
+const { writeFile, copyFile } = require("./utils/generate-site.js");
 const generatePage = require("./src/page-template.js");
-
-const dummyData = {
-  name: "Trev",
-  github: "tj-tieso",
-  confirmAbout: true,
-  about: "I like DnD",
-  projects: [
-    {
-      name: "Run Buddy",
-      description: "Lets run.",
-      languages: ["HTML", "CSS"],
-      link: "https://github.com/tj-tieso/run-buddy",
-      feature: true,
-      confirmAddProject: true,
-    },
-    {
-      name: "Robot Gladiators",
-      description: "FIIIIIGGGGGHHHTTTT",
-      languages: ["HTML", "CSS"],
-      link: "https://github.com/tj-tieso/robot-gladiators",
-      feature: true,
-      confirmAddProject: true,
-    },
-  ],
-};
-
-// const pageHTML = generatePage(name, github);
 
 const promptUser = () => {
   return inquirer.prompt([
@@ -168,20 +141,22 @@ Add a New Project
     });
 };
 
-// dummy data call
-// const pageHTML = generatePage(dummyData);
-
 // real data call
 promptUser()
   .then(promptProject)
   .then((portfolioData) => {
-    const pageHTML = generatePage(portfolioData);
-
-    fs.writeFile("./index.html", pageHTML, (err) => {
-      if (err) throw new Error(err);
-
-      console.log(
-        "Page created! Check ouct index.html in this directory to see it!"
-      );
-    });
+    return generatePage(portfolioData);
+  })
+  .then((pageHTML) => {
+    return writeFile(pageHTML);
+  })
+  .then((writeFileResponse) => {
+    console.log(writeFileResponse);
+    return copyFile();
+  })
+  .then((copyFileResponse) => {
+    console.log(copyFileResponse);
+  })
+  .catch((err) => {
+    console.log(err);
   });
