@@ -1,6 +1,31 @@
 const inquirer = require("inquirer");
-// const fs = require("fs");
-// const generatePage = require("./src/page-template.js");
+const fs = require("fs");
+const generatePage = require("./src/page-template.js");
+
+const dummyData = {
+  name: "Trev",
+  github: "tj-tieso",
+  confirmAbout: true,
+  about: "I like DnD",
+  projects: [
+    {
+      name: "Run Buddy",
+      description: "Lets run.",
+      languages: ["HTML", "CSS"],
+      link: "https://github.com/tj-tieso/run-buddy",
+      feature: true,
+      confirmAddProject: true,
+    },
+    {
+      name: "Robot Gladiators",
+      description: "FIIIIIGGGGGHHHTTTT",
+      languages: ["HTML", "CSS"],
+      link: "https://github.com/tj-tieso/robot-gladiators",
+      feature: true,
+      confirmAddProject: true,
+    },
+  ],
+};
 
 // const pageHTML = generatePage(name, github);
 
@@ -143,14 +168,20 @@ Add a New Project
     });
 };
 
+// dummy data call
+// const pageHTML = generatePage(dummyData);
+
+// real data call
 promptUser()
   .then(promptProject)
   .then((portfolioData) => {
-    console.log(portfolioData);
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile("./index.html", pageHTML, (err) => {
+      if (err) throw new Error(err);
+
+      console.log(
+        "Page created! Check ouct index.html in this directory to see it!"
+      );
+    });
   });
-
-// fs.writeFile("./index.html", pageHTML, (err) => {
-//   if (err) throw err;
-
-//   console.log("Portfolio complete! Checkout index.html to see the output");
-// });
